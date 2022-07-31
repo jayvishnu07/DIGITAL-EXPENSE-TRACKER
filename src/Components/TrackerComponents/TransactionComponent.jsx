@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useState , useEffect} from 'react';
 import styled from "styled-components";
 import { PDFExport} from "@progress/kendo-react-pdf";
@@ -113,10 +113,11 @@ const TransactionComponent = (props) => {
       </AddTnxDetailWrapper>}
     </Cell>
   );
+  
 };
 
 
-const filterData = (searchText) => {
+const filterData = useCallback( (searchText) => {
   if (!searchText || !searchText.trim().length) {
     updateTxn(props.transactions);
     return;
@@ -126,11 +127,11 @@ const filterData = (searchText) => {
     payload.desc.toLowerCase().includes(searchText.toLowerCase().trim()),
   );
   updateTxn(txn);
-};
+});
 
 useEffect(() => {
   filterData(searchText);
-}, [props.transactions , searchText]);
+}, [props.transactions , searchText ,filterData]);
 
 const handleExportWithComponent=(event)=>{
   pdfExportComponents.current.save();

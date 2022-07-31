@@ -9,6 +9,7 @@ export const ProfileProvider =({children})=>{
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
+    const [isRgisteration , setIsRgisteration] = useState(false)
     
     useEffect(() => {
       setIsLoading(true);
@@ -44,7 +45,7 @@ export const ProfileProvider =({children})=>{
       try {
         const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
         
-        if (additionalUserInfo.isNewUser) {
+        if (additionalUserInfo.isNewUser && isRgisteration) {
           toast.success('Sign-In Successful', {
             position: "top-center",
             autoClose: 3000,
@@ -54,12 +55,23 @@ export const ProfileProvider =({children})=>{
             draggable: true,
             progress: undefined,
           });
-
+          console.log("newuser",isRgisteration);
           await database.ref(`/profiles/${user.uid}`).set({
             name: user.displayName,
             createdAt: firebase.database.ServerValue.TIMESTAMP,
           });
           
+        }
+        if(additionalUserInfo.isNewUser && !isRgisteration){
+          toast.error('No such account found, sign-Up to get in', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
         if(!additionalUserInfo.isNewUser){
           toast.success('Welcome Back...!', {
@@ -73,6 +85,8 @@ export const ProfileProvider =({children})=>{
           });
         }
         console.log(additionalUserInfo , user );
+        console.log("not newuser",isRgisteration);
+        
         
         
       } catch (err) {
@@ -190,7 +204,8 @@ export const ProfileProvider =({children})=>{
         registerUser,
         SignInUser,
         forgotPassword,
-        SignInWithProvider
+        SignInWithProvider,
+        setIsRgisteration
       };
       
       

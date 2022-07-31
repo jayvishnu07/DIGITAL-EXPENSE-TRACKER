@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import './Register.css'
 
 import { useProfile } from "../../../ContextApi/profile.context";
+import firebase from 'firebase/app';
 
 
 import { FaGoogle } from "react-icons/fa";
@@ -12,7 +13,9 @@ const Register = () => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const { registerUser } = useProfile();
+  const { registerUser, SignInWithProvider , setIsRgisteration} = useProfile();
+
+  // register with mail-id password
 
   const signUp = e => {
     e.preventDefault();
@@ -25,6 +28,14 @@ const Register = () => {
       registerUser(email, password, name);
     }
   }
+
+    // register with google
+
+    const SignUpwithGoogle = () => {
+      SignInWithProvider(new firebase.auth.GoogleAuthProvider());
+      setIsRgisteration(true)
+  
+    }
   return (
     <div className="register-container">
       <span className='register-main-title' >Sign-Up</span>
@@ -32,7 +43,7 @@ const Register = () => {
         <div className="register-google-icon">
           <FaGoogle />
         </div>
-        <h4 className='register-google-title'>Sign-Up with Google</h4>
+        <h4 className='register-google-title' onClick={SignUpwithGoogle}>Sign-Up with Google</h4>
       </div>
       <div className="register-type-seporator">
         -------------------- (Or) --------------------

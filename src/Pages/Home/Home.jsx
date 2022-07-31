@@ -1,4 +1,4 @@
-import React from "react"; 
+import React from "react";
 import styled from "styled-components";
 import HomeComponent from "../../Components/TrackerComponents/HomeComponent";
 import { useProfile } from "../../ContextApi/profile.context";
@@ -37,9 +37,9 @@ font-weight : bold;
 
 function Home() {
 
-  const {profile} = useProfile();
- 
-  if(!profile){
+  const { profile } = useProfile();
+
+  if (!profile) {
     {
       toast.info('Login to Enter...!', {
         position: "top-center",
@@ -52,21 +52,21 @@ function Home() {
       })
     }
   }
- 
-  
-  return(
-    <HomeBody>      
-  <Container>
-    <Header>
-       {`Hey, ${profile.displayName ? profile.displayName : defaultName} ...!`}
+
+
+  return (
+    <HomeBody>
+      <Container>
+        <Header>
+          {`Hey, ${profile.displayName ? profile.displayName : defaultName} ...!`}
 
         </Header>
-    
-    <HomeComponent/>
-  </Container> 
+
+        <HomeComponent />
+      </Container>
     </HomeBody>
-  ) 
-  
+  )
+
 }
 
 export default Home;
