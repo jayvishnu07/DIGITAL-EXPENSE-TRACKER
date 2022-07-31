@@ -40,12 +40,10 @@ const Navbar = () => {
           <li>
             <div className='nav-links-item nav-links-item-profile'>
               <BsPersonCircle />
-              <li>
-                <div class="nav-dropdown-content">
-                  <button className='nav-dropdown-content-item' to='/' >Profile</button>
-                  <button className='nav-dropdown-content-item' onClick={OnSignOutClicked} >Sign-Out</button>
-                </div>
-              </li>
+              <div className="nav-dropdown-content">
+                <button className='nav-dropdown-content-item' to='/' >Profile</button>
+                <button className='nav-dropdown-content-item' onClick={OnSignOutClicked} >Sign-Out</button>
+              </div>
             </div>
           </li>
         </ul>

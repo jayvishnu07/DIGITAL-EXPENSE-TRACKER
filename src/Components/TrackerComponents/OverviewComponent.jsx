@@ -82,8 +82,8 @@ const ExpenseBox = styled.div`
 const OverviewComponent = (props) => {
 
 const NewTransactionView =(props)=>{
-  const [amount , setAmount] = useState();
-  const [desc , setDesc] = useState();
+  const [amount , setAmount] = useState(0);
+  const [desc , setDesc] = useState('');
   const [type , setType] = useState("EXPENSE");  
   const {profile} = useProfile();
 
