@@ -1,8 +1,11 @@
 import React, { useCallback, useRef } from 'react'
-import { useState , useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import styled from "styled-components";
-import { PDFExport} from "@progress/kendo-react-pdf";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
+import { database } from '../../misc/Firebase';
+
+import { useProfile } from '../../ContextApi/profile.context';
 
 
 const Container = styled.div`
@@ -24,7 +27,7 @@ font-weight: bold;
 }
 `;
 
-const PdfButton =styled.button`
+const PdfButton = styled.button`
 background:black;
 color:white;
 padding: 5px 10px;
@@ -42,7 +45,7 @@ align-items: center;
 
 
 
-const Cell =styled.div`  
+const Cell = styled.div`  
   background-color: white;
   width: 20rem;
   color: #0d1d2c;
@@ -80,88 +83,107 @@ const AddTnxDetailWrapper = styled.div`
      display: block;
   `;
 
-
 const TransactionComponent = (props) => {
 
   const [searchText, updateSearchText] = useState("");
   const [filteredTransaction, updateTxn] = useState(props.transactions);
-  
+
   const TransactionCell = (props) => {
-    const [isCellClicked , setIsCellClicked] = useState(false);
-    
-    const cellClickHandler=()=>{
+    const [isCellClicked, setIsCellClicked] = useState(false);
+
+    const cellClickHandler = () => {
       setIsCellClicked(!isCellClicked);
     }
-     
-    console.log("props.item",props.item.timeStamp);
 
-      const date = new Date(props.item.timeStamp)
-      console.log( date.toDateString() , date.toTimeString() );
+
+    const date = new Date(props.item.timeStamp)
+    // console.log(date.toDateString(), date.toTimeString());
+
+    const { profile } = useProfile();
+
+    const handleDelete = async () => {
+      console.log("delete clicked");
+
+      // remove(ref(database, `/profiles/${profile.uid}/values/${props.item.id}` ))
+
+      let userRef = database.ref(`/profiles/${profile.uid}/values/${props.item.id}`)
+      userRef.remove();
+      
+      // let database.ref(`/profiles/${profile.uid}/values`)
+      //   .remove(`/${props.item.id}`)
+
+      console.log("delete clicked", props.item.id);
+      console.log("delete clicked", props.item.id);
+
+
+    }
+
+
+    return (
+      <Cell key={props.index} onClick={cellClickHandler} isExpense={props.item?.type === "EXPENSE"}>
+        <TnxDetailWrapper>
+          <span>{props.item?.desc}</span>
+          <span>${props.item?.amount}</span>
+        </TnxDetailWrapper>
+
+        {isCellClicked && <AddTnxDetailWrapper  >
+          <hr />
+          <br />
+          <span> Date : {date ? date.toDateString() : "Date not found"}</span><br /><br />
+          <span> Time : {date ? date.toTimeString() : "Time not found"}</span>
+          <button onClick={handleDelete}>Delete</button>
+        </AddTnxDetailWrapper>}
+      </Cell>
+    );
+
+  };
+
+
+  const filterData = useCallback((searchText) => {
+    if (!searchText || !searchText.trim().length) {
+      updateTxn(props.transactions);
+      return;
+    }
+    let txn = [...props.transactions];
+    txn = txn.filter((payload) =>
+      payload.desc.toLowerCase().includes(searchText.toLowerCase().trim()),
+    );
+    updateTxn(txn);
+  });
+
+  useEffect(() => {
+    filterData(searchText);
+  }, [props.transactions, searchText, filterData]);
+
+  const handleExportWithComponent = (event) => {
+    pdfExportComponents.current.save();
+
+  }
+  const pdfExportComponents = useRef(null);
+
 
   return (
-    <Cell key={props.index} onClick={cellClickHandler}  isExpense={props.item?.type === "EXPENSE"}>
-      <TnxDetailWrapper>
-      <span>{props.item?.desc}</span>        
-      <span>${props.item?.amount}</span>
-      </TnxDetailWrapper> 
-      
-      {isCellClicked && <AddTnxDetailWrapper  >
-        <hr />
-        <br />
-      <span> Date : {date? date.toDateString() : "Date not found" }</span><br /><br />
-      <span> Time : {date? date.toTimeString() : "Time not found" }</span>
-      </AddTnxDetailWrapper>}
-    </Cell>
-  );
-  
-};
-
-
-const filterData = useCallback( (searchText) => {
-  if (!searchText || !searchText.trim().length) {
-    updateTxn(props.transactions);
-    return;
-  }
-  let txn = [...props.transactions];
-  txn = txn.filter((payload) =>
-    payload.desc.toLowerCase().includes(searchText.toLowerCase().trim()),
-  );
-  updateTxn(txn);
-});
-
-useEffect(() => {
-  filterData(searchText);
-}, [props.transactions , searchText ,filterData]);
-
-const handleExportWithComponent=(event)=>{
-  pdfExportComponents.current.save();
-
-}
-const pdfExportComponents=useRef(null);
-
-
- return(
-        <Container>
-          <TitleAndPdfWrapper>
-          <span>Transactions</span>
-          <PdfButton onClick={handleExportWithComponent}>Export PDF</PdfButton>
-          </TitleAndPdfWrapper>
-      <input 
+    <Container>
+      <TitleAndPdfWrapper>
+        <span>Transactions</span>
+        <PdfButton onClick={handleExportWithComponent}>Export PDF</PdfButton>
+      </TitleAndPdfWrapper>
+      <input
         placeholder="Search"
         onChange={(e) => {
           updateSearchText(e.target.value);
           filterData(e.target.value);
         }}
-        /> 
-        <PDFExport ref={pdfExportComponents} paperSize="A4" >
-         {filteredTransaction?.map((item , index) => (
-         <TransactionCell  key={index} item={item} />
-         ))}
-         </PDFExport>
-        </Container>
-        
-      )
-  
+      />
+      <PDFExport ref={pdfExportComponents} paperSize="A4" >
+        {filteredTransaction?.map((item, index) => (
+          <TransactionCell key={index} item={item} />
+        ))}
+      </PDFExport>
+    </Container>
+
+  )
+
 };
 
 

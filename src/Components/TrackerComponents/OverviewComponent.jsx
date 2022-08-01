@@ -5,6 +5,10 @@ import  firebase from 'firebase/app';
 import {useProfile} from '../../ContextApi/profile.context'
 import { toast } from 'react-toastify';
 
+//uid
+
+import {uid} from 'uid/secure'
+
 
 const Container = styled.div`
 display: flex;
@@ -89,12 +93,13 @@ const NewTransactionView =(props)=>{
 
   const newTransaction =async(profile)=>{
   
+    var uuid = uid();
     
-
     try {
       await database
       .ref(`/profiles/${profile.uid}/values`)
       .push({
+        id : uuid,            
         amount: amount,
         desc: desc,
         type: type,

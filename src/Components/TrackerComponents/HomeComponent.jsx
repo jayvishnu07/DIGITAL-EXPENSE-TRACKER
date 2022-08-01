@@ -6,6 +6,8 @@ import { database } from '../../misc/Firebase';
 import OverviewComponent from './OverviewComponent';
 import TransactionComponent from './TransactionComponent';
 
+
+
 const Container = styled.div`
 display: flex;
 flex-direction: column;
@@ -14,64 +16,68 @@ font-family: Montserrat;
 align-items : center;
 width:360px;
 `;
-const HomeComponent  = (props) => {
-  const [transactions, setTransactions] =useState([]);
-  const [expense, updateExpense] =useState(0);
-  const [income, updateIncome] =useState(0);
+const HomeComponent = (props) => {
+  const [transactions, setTransactions] = useState([]);
+  const [expense, updateExpense] = useState(0);
+  const [income, updateIncome] = useState(0);
 
 
-  const {profile} = useProfile();
+  const { profile } = useProfile();
 
-useEffect(()=>{
-  async function fetchData() {
-     database
-      .ref(`/profiles/${profile.uid}/values`)
-      .on("value", function (snapshot) {
-        var temp = []
-        snapshot.forEach(function (childSnapshot) {
-          var data = childSnapshot.val();
-          console.log("data : ", data); 
-          temp.push({                
-            amount: data.amount,
-            desc: data.desc,
-            type: data.type,
-            timeStamp : data.timeStamp,
-            dateAndTime : data.dateAndTime
-          })        
+  useEffect(() => {
+
+
+    async function fetchData() {
+      
+      database
+        .ref(`/profiles/${profile.uid}/values`)
+        .on("value", function (snapshot) {
+          var temp = []
+          snapshot.forEach(function (childSnapshot) {
+            var data = childSnapshot.val();
+            console.log("data  delete attempt : ", data);
+            console.log("data  delete attempt : ", Object.keys(data));
+            temp.push({
+              id: data.id,
+              amount: data.amount,
+              desc: data.desc,
+              type: data.type,
+              timeStamp: data.timeStamp,
+              dateAndTime: data.dateAndTime
+            })
+          });
+          setTransactions(temp);
+          console.log("temp", temp);
         });
+    }
+    fetchData();
 
-        setTransactions( temp );
-      });
-  }
-  fetchData();
- 
-}, [profile.uid])
+  }, [profile.uid])
 
 
 
-const newTransaction =(item)=>{
-  const transationArray=[...transactions];
-  transationArray.push(item);
-  setTransactions(transationArray);
- 
+  const newTransaction = (item) => {
+    const transationArray = [...transactions];
+    transationArray.push(item);
+    setTransactions(transationArray);
+
   };
-  const calculateBalance=()=>{
+  const calculateBalance = () => {
     var exp = 0;
     let inc = 0;
-    transactions.map((item)=>
-    {item.type==="EXPENSE" ?( exp= parseInt(exp)+ parseInt(item.amount)):(inc= parseInt(inc)+ parseInt(item.amount)) }
-  );
-  updateExpense( parseInt(exp));
-  updateIncome(parseInt(inc));
+    transactions.map((item) => { item.type === "EXPENSE" ? (exp = parseInt(exp) + parseInt(item.amount)) : (inc = parseInt(inc) + parseInt(item.amount)) }
+    );
+    updateExpense(parseInt(exp));
+    updateIncome(parseInt(inc));
   };
-useEffect(() => calculateBalance(),[transactions , calculateBalance]);
+  useEffect(() => calculateBalance(), [transactions, calculateBalance]);
 
   return (
     <Container>
-      <OverviewComponent newTransaction={newTransaction} expense={expense} income={income}/>
+      <OverviewComponent newTransaction={newTransaction} expense={expense} income={income} />
       {transactions?.length ? (
-                <TransactionComponent transactions={transactions} />
-            ) : " "}
+        <TransactionComponent transactions={transactions} />
+      ) : " "}
     </Container>
   )
 }

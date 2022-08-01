@@ -2,6 +2,7 @@ import  firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database'
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyCRCt_dqCYNilmwsb4iCVyxnU7pAt7aBPk",
     authDomain: "expense-tracker-abcd7.firebaseapp.com",
