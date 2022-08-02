@@ -6,9 +6,10 @@
     height: 400px;
     width: 400px;
     gap: 20px;
-    
+
 }
-.login-main-title{
+
+.login-main-title {
     color: white;
     font-size: 30px;
     font-weight: bold;
@@ -28,22 +29,23 @@
 }
 
 
-.login-google-icon{
+.login-google-icon {
     background-color: white;
     height: 40px;
     width: 40px;
     display: flex;
     align-items: center;
-    justify-content:center;
-    border-radius: 30px ;
+    justify-content: center;
+    border-radius: 30px;
 }
 
-.login-google-title{
+.login-google-title {
     margin: auto;
     color: white;
 
 }
-.login-type-seporator{
+
+.login-type-seporator {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,11 +57,11 @@
 .login-form-input-div {
     display: flex;
     flex-direction: column;
-    
+
 }
 
 
-.login-form-input{
+.login-form-input {
     margin: 10px 0 5px 0;
     border-radius: 30px;
     border: none;
@@ -72,24 +74,24 @@
 
 }
 
-.login-form-input:active{
+.login-form-input:active {
     transform: scale(.98);
 
 }
 
-.login-remember-txt{
+.login-remember-txt {
     margin: 0 0 0 10px;
     font-weight: 500;
 }
 
-.login-forgot-txt{
+.login-forgot-txt {
     color: blue;
     font-weight: 500;
     cursor: pointer;
 
 }
 
-.login-submit-btn{
+.login-submit-btn {
     padding: 10px 20px 10px 20px;
     width: 150px;
     background-color: black;
@@ -97,4 +99,30 @@
     font-weight: bold;
     border-radius: 20px;
     cursor: pointer;
+}
+
+@media only screen and (max-width:500px) {
+    .login-container {
+        margin: 10px 0 0 0;
+    }
+
+    .login-main-title {
+        font-size: 25px;
+    }
+
+    .login-google-button {
+        width: 300px;
+        height: 42px;
+        margin: 10px 0 0 0;
+    }
+
+    .login-form-input {
+        margin: 10px 0 5px 0;
+        border-radius: 30px;
+        width: 300px;
+        height: 35px;
+        box-sizing: border-box;
+        padding: 10px;
+    
+    }
 }
