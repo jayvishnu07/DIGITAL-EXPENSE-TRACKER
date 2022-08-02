@@ -22,13 +22,15 @@ align-items : center;
 font-family: Montserrat;
 
 `;
-const Header = styled.span`
+const Headerdiv = styled.div`
 margin-top: 30px;
+width: 100vw;
 color:black;
 font-size : 25px;
 font-weight : bold;
+text-align: center;
+
 @media only screen and (max-width:960px){  
-  transform: translateX(-25%);
   font-size : 18px;
 }
 `;
@@ -57,10 +59,12 @@ function Home() {
   return (
     <HomeBody>
       <Container>
-        <Header>
-          {`Hey, ${profile.displayName ? profile.displayName : defaultName} ...!`}
+        <Headerdiv>
+          <div>
+            {`Hey, ${profile.displayName ? profile.displayName : defaultName} ...!`}
+          </div>
 
-        </Header>
+        </Headerdiv>
 
         <HomeComponent />
       </Container>

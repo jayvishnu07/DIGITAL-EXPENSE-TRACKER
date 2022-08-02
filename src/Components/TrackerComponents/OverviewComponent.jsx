@@ -48,6 +48,7 @@ gap : 10px;
 padding: 15px 20px;
 margin: 20px;
 width:100%;
+box-sizing: border-box;
 & input {
   outline:none;
   padding:10px 12px;
@@ -62,6 +63,10 @@ flex-direction : row;
 width:100%;
 align-items:center;
 gap: 10px;
+ & input , label{
+  cursor: pointer;
+ }
+
 `;
 const Expense = styled.div`
   display: flex;
@@ -86,7 +91,7 @@ const ExpenseBox = styled.div`
 const OverviewComponent = (props) => {
 
 const NewTransactionView =(props)=>{
-  const [amount , setAmount] = useState(0);
+  const [amount , setAmount] = useState(null);
   const [desc , setDesc] = useState('');
   const [type , setType] = useState("EXPENSE");  
   const {profile} = useProfile();

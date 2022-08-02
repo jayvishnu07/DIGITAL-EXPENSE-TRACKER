@@ -21,7 +21,7 @@ const HomeComponent = (props) => {
   const [expense, updateExpense] = useState(0);
   const [income, updateIncome] = useState(0);
 
-
+  var transactionId;
   const { profile } = useProfile();
 
   useEffect(() => {
@@ -32,13 +32,15 @@ const HomeComponent = (props) => {
       database
         .ref(`/profiles/${profile.uid}/values`)
         .on("value", function (snapshot) {
+          console.log("temp snapshot.key", snapshot.key);
+          
           var temp = []
           snapshot.forEach(function (childSnapshot) {
+            transactionId = childSnapshot.key
+            console.log("temp childSnapshot.key", childSnapshot.key);
             var data = childSnapshot.val();
-            console.log("data  delete attempt : ", data);
-            console.log("data  delete attempt : ", Object.keys(data));
             temp.push({
-              id: data.id,
+              id: transactionId,
               amount: data.amount,
               desc: data.desc,
               type: data.type,

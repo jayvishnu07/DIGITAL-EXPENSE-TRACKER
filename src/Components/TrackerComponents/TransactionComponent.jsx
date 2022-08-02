@@ -59,13 +59,14 @@ const Cell = styled.div`
   cursor: pointer;
   border-right: 4px solid ${(props) => (props.isExpense ? "red" : "green")}; 
   &:hover{
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-  transition: .5s ease;
+  -webkit-transform: scale(0.9);
+  -ms-transform: scale(1);
+  transform: scale(1.03);
+  transition: .2s ease-in-out;
   } 
   &:active{
   transform: scale(.99);
+  transition: none;
 
   } 
   `;
@@ -80,8 +81,20 @@ const TnxDetailWrapper = styled.div`
   `;
 
 const AddTnxDetailWrapper = styled.div`
-     display: block;
+  display: block;
   `;
+
+const DeleteButton = styled.button`
+  display: block;
+  background:black;
+  color:white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:12px;
+  margin: auto;
+`;
 
 const TransactionComponent = (props) => {
 
@@ -101,19 +114,15 @@ const TransactionComponent = (props) => {
 
     const { profile } = useProfile();
 
-    const handleDelete = async () => {
+    const handleDelete = (obj) => {
       console.log("delete clicked");
 
-      // remove(ref(database, `/profiles/${profile.uid}/values/${props.item.id}` ))
 
-      let userRef = database.ref(`/profiles/${profile.uid}/values/${props.item.id}`)
-      userRef.remove();
-      
-      // let database.ref(`/profiles/${profile.uid}/values`)
-      //   .remove(`/${props.item.id}`)
+      database.ref(`/profiles/${profile.uid}/values/${obj}`).remove()
 
-      console.log("delete clicked", props.item.id);
-      console.log("delete clicked", props.item.id);
+
+      console.log("delete clicked - obj", obj);
+      console.log("delete clicked -  props.item.id", props.item.id);
 
 
     }
@@ -127,11 +136,12 @@ const TransactionComponent = (props) => {
         </TnxDetailWrapper>
 
         {isCellClicked && <AddTnxDetailWrapper  >
+        <br />
           <hr />
           <br />
           <span> Date : {date ? date.toDateString() : "Date not found"}</span><br /><br />
           <span> Time : {date ? date.toTimeString() : "Time not found"}</span>
-          <button onClick={handleDelete}>Delete</button>
+          <DeleteButton onClick={() => { handleDelete(props.item.id) }}>Delete</DeleteButton>
         </AddTnxDetailWrapper>}
       </Cell>
     );
