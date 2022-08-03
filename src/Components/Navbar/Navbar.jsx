@@ -35,13 +35,14 @@ const Navbar = () => {
       <div className="nav-links">
         <ul>
           <li> <Link className='nav-links-item' to='/'> Home </Link> </li>
-          <li> <Link className='nav-links-item' to='/extra'> Extra </Link> </li>
+          <li> <Link className='nav-links-item' to='/history'> History </Link> </li>
           <li> <Link className='nav-links-item' to='/contact'> Contact </Link> </li>
           <li>
             <div className='nav-links-item nav-links-item-profile'>
               <BsPersonCircle />
               <div className="nav-dropdown-content">
                 <button className='nav-dropdown-content-item' to='/' >Profile</button>
+                <button className='nav-dropdown-content-item' to='/' >Change Password</button>
                 <button className='nav-dropdown-content-item' onClick={OnSignOutClicked} >Sign-Out</button>
               </div>
             </div>

@@ -3,6 +3,7 @@ import {Outlet ,Navigate} from 'react-router-dom';
 import { ClimbingBoxLoader } from 'react-spinners';
 import { useProfile } from '../../ContextApi/profile.context';
 // import { SpinnerCenter } from '../../Pages/Style';
+import './css/Loading.css'
 
 const PublicRoute = () => {
 
@@ -12,7 +13,9 @@ const PublicRoute = () => {
     
 if(isLoading && !profile){
   return(
-    <ClimbingBoxLoader  />
+    <div className='loader-div'>
+        <ClimbingBoxLoader />
+      </div>
       )
 }
 

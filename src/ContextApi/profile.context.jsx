@@ -10,6 +10,7 @@ export const ProfileProvider =({children})=>{
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [isRgisteration , setIsRgisteration] = useState(false)
+    const [transactionApi, setTransactionApi]= useState([])
     
     useEffect(() => {
       setIsLoading(true);
@@ -46,6 +47,11 @@ export const ProfileProvider =({children})=>{
         const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
         
         if (additionalUserInfo.isNewUser && isRgisteration) {
+          console.log("newuser",isRgisteration);
+          await database.ref(`/profiles/${user.uid}`).set({
+            name: user.displayName,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+          });
           toast.success('Sign-In Successful', {
             position: "top-center",
             autoClose: 3000,
@@ -55,15 +61,10 @@ export const ProfileProvider =({children})=>{
             draggable: true,
             progress: undefined,
           });
-          console.log("newuser",isRgisteration);
-          await database.ref(`/profiles/${user.uid}`).set({
-            name: user.displayName,
-            createdAt: firebase.database.ServerValue.TIMESTAMP,
-          });
           
         }
-        if(additionalUserInfo.isNewUser && !isRgisteration){
-          toast.error('No such account found, sign-Up to get in', {
+        if(!additionalUserInfo.isNewUser && isRgisteration){
+          toast.warn('Existing Account', {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: false,
@@ -73,7 +74,7 @@ export const ProfileProvider =({children})=>{
             progress: undefined,
           });
         }
-        if(!additionalUserInfo.isNewUser){
+        if(!additionalUserInfo.isNewUser && !isRgisteration ){
           toast.success('Welcome Back...!', {
             position: "top-center",
             autoClose: 3000,
@@ -195,17 +196,22 @@ export const ProfileProvider =({children})=>{
         })}).catch((err)=>{console.log(err);})
       };
       
+      const Transaction =(transactions)=>{
+          setTransactionApi(transactions)
+      }
       
       
       const profileContextValue = {
         profile,
         isLoading,
         error,
+        transactionApi,
         registerUser,
         SignInUser,
         forgotPassword,
         SignInWithProvider,
-        setIsRgisteration
+        setIsRgisteration,
+        Transaction
       };
       
       

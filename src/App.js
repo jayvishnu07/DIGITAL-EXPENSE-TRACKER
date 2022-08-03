@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // pages.......
 import Navbar from "./Components/Navbar/Navbar";
 import Home from './Pages/Home/Home'
-import Extra from './Pages/Extra/Extra'
+import History from './Pages/History/History'
 import Contact from './Pages/Contact/Contact'
 import Form from './Pages/Form/Form'
 
@@ -27,7 +27,7 @@ function App() {
               <Route path='/' element={<><Navbar /><Home /></>} />
             </Route>
             <Route path='*' element={<><Navbar /><Home /></>} />
-            <Route path='/extra' element={<><Navbar /><Extra /></>} />
+            <Route path='/history' element={<><Navbar /><History /></>} />
             <Route path='/contact' element={<><Navbar /><Contact /></>} />
             <Route exact element={<PublicRoute />} >
               <Route path="/login" exact element={<Form />} />

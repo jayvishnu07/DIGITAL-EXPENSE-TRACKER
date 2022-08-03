@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { useState, useEffect } from 'react';
 import styled from "styled-components";
-import { PDFExport } from "@progress/kendo-react-pdf";
 
 import { database } from '../../misc/Firebase';
 
@@ -27,16 +26,7 @@ font-weight: bold;
 }
 `;
 
-const PdfButton = styled.button`
-background:black;
-color:white;
-padding: 5px 10px;
-border-radius: 4px;
-cursor:pointer;
-font-weight:bold;
-font-size:15px;
-margin-left: 6rem;
-`;
+
 const TitleAndPdfWrapper = styled.div`
 display: flex;
 align-items: center;
@@ -50,7 +40,7 @@ const Cell = styled.div`
   width: 20rem;
   color: #0d1d2c;
   padding: 10px 15px;
-  margin: 10px 0 10px 0;
+  margin: 10px 0 0 0;
   font-size: 14px;
   border-radius: 4px;
   border: 1px solid #e6e8e9;
@@ -112,7 +102,8 @@ const TransactionComponent = (props) => {
     const date = new Date(props.item.timeStamp)
     // console.log(date.toDateString(), date.toTimeString());
 
-    const { profile } = useProfile();
+    const { profile} = useProfile();
+
 
     const handleDelete = (obj) => {
       console.log("delete clicked");
@@ -165,18 +156,11 @@ const TransactionComponent = (props) => {
     filterData(searchText);
   }, [props.transactions, searchText, filterData]);
 
-  const handleExportWithComponent = (event) => {
-    pdfExportComponents.current.save();
-
-  }
-  const pdfExportComponents = useRef(null);
-
 
   return (
     <Container>
       <TitleAndPdfWrapper>
-        <span>Transactions</span>
-        <PdfButton onClick={handleExportWithComponent}>Export PDF</PdfButton>
+        <span>Transactions History</span>
       </TitleAndPdfWrapper>
       <input
         placeholder="Search"
@@ -185,11 +169,10 @@ const TransactionComponent = (props) => {
           filterData(e.target.value);
         }}
       />
-      <PDFExport ref={pdfExportComponents} paperSize="A4" >
+      
         {filteredTransaction?.map((item, index) => (
           <TransactionCell key={index} item={item} />
         ))}
-      </PDFExport>
     </Container>
 
   )

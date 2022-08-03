@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useProfile } from '../../ContextApi/profile.context';
 import { database } from '../../misc/Firebase';
@@ -21,8 +21,8 @@ const HomeComponent = (props) => {
   const [expense, updateExpense] = useState(0);
   const [income, updateIncome] = useState(0);
 
-  var transactionId;
-  const { profile } = useProfile();
+
+  const { profile,Transaction } = useProfile();
 
   useEffect(() => {
 
@@ -36,7 +36,7 @@ const HomeComponent = (props) => {
           
           var temp = []
           snapshot.forEach(function (childSnapshot) {
-            transactionId = childSnapshot.key
+            var transactionId = childSnapshot.key
             console.log("temp childSnapshot.key", childSnapshot.key);
             var data = childSnapshot.val();
             temp.push({
@@ -64,15 +64,24 @@ const HomeComponent = (props) => {
     setTransactions(transationArray);
 
   };
-  const calculateBalance = () => {
-    var exp = 0;
-    let inc = 0;
-    transactions.map((item) => { item.type === "EXPENSE" ? (exp = parseInt(exp) + parseInt(item.amount)) : (inc = parseInt(inc) + parseInt(item.amount)) }
-    );
-    updateExpense(parseInt(exp));
-    updateIncome(parseInt(inc));
-  };
-  useEffect(() => calculateBalance(), [transactions, calculateBalance]);
+  
+
+  if(transactions){
+    Transaction(transactions)
+  }
+
+  useEffect( () =>{
+   
+    const calculateBalance = () => {
+      var exp = 0;
+      let inc = 0;
+      transactions.map((item) => { item.type === "EXPENSE" ? (exp = parseInt(exp) + parseInt(item.amount)) : (inc = parseInt(inc) + parseInt(item.amount)) }
+      );
+      updateExpense(parseInt(exp));
+      updateIncome(parseInt(inc));
+    };
+    calculateBalance()
+  }, [transactions])
 
   return (
     <Container>
