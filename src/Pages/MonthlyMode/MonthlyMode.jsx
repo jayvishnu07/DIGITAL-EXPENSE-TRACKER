@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import HomeComponent from "../../Components/TrackerComponents/HomeComponent";
-import { useProfile } from "../../ContextApi/profile.context";
-import { toast } from 'react-toastify';
-import Draggable from 'react-draggable';
+import MonthlyHome from "../../Components/MonthlyTrackerComponents/MonthlyHome";
+
+import './MonthlyMode.css'
+
 const HomeBody = styled.div`
 margin-top: 0;
 /* background: #e2a9e5;
@@ -18,6 +18,7 @@ min-width: 100%;
 `;
 
 const Container = styled.div`
+height: 100vh;
 display: flex;
 flex-direction: column;
 align-items : center;
@@ -39,35 +40,15 @@ text-align: center;
 
 
 
-function Home() {
-
-  const { profile } = useProfile();
-
-  if (!profile) {
-    {
-      toast.info('Login to Enter...!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-    }
-  }
-
+const Profile=()=>{
 
   return (
     <HomeBody>
       <Container>
-        <Headerdiv>
-        </Headerdiv>
-        <HomeComponent />
+        <MonthlyHome />
       </Container>
     </HomeBody>
   )
 
 }
-
-export default Home;
+export default Profile

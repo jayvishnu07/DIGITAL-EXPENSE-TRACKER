@@ -1,10 +1,10 @@
-import React, { useCallback, useRef } from 'react'
-import { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from "styled-components";
+import { useProfile } from '../../ContextApi/profile.context';
+import './Monthly-tracker-css/Monthly.css'
+
 
 import { database } from '../../misc/Firebase';
-
-import { useProfile } from '../../ContextApi/profile.context';
 
 
 const Container = styled.div`
@@ -34,8 +34,6 @@ align-items: center;
 color : black;
 `;
 
-
-
 const Cell = styled.div`  
   background-color: white;
   width: 20rem;
@@ -48,7 +46,7 @@ const Cell = styled.div`
   align-items: center;
   font-weight: normal;
   cursor: pointer;
-  border-right: 4px solid ${(props) => (props.isExpense ? "red" : "green")}; 
+  border-right: 4px solid red ; 
   -webkit-box-shadow: 0px 8px 15px -4px rgba(38,38,38,0.45);
 -moz-box-shadow: 0px 8px 15px -4px rgba(38,38,38,0.45);
 box-shadow: 0px 8px 15px -4px rgba(38,38,38,0.45);
@@ -64,6 +62,8 @@ box-shadow: 0px 8px 15px -4px rgba(38,38,38,0.45);
 
   } 
   `;
+
+
 const TnxDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -90,10 +90,20 @@ const DeleteButton = styled.button`
   margin: auto;
 `;
 
-const TransactionComponent = (props) => {
+const MonthlyTransaction = (props) => {
 
+  const { profile } = useProfile();
+
+  const [filteredTransaction, updateTxn] = useState([]);
   const [searchText, updateSearchText] = useState("");
-  const [filteredTransaction, updateTxn] = useState(props.transactions);
+
+
+
+  useEffect(() => {
+    updateTxn(props.transactionsMonthly)
+  })
+
+  // TransactionCell ****************************
 
   const TransactionCell = (props) => {
     const [isCellClicked, setIsCellClicked] = useState(false);
@@ -102,19 +112,19 @@ const TransactionComponent = (props) => {
       setIsCellClicked(!isCellClicked);
     }
 
+    const date = new Date(props.item.dateAndTime);
 
-    const date = new Date(props.item.timeStamp)
-    const { profile } = useProfile();
-
-    const handleDelete = (obj) => {
-      database.ref(`/profiles/${profile.uid}/values/${obj}`).remove()
+    const handleMonthlyDelete = (obj) => {
+      database
+        .ref(`/profiles/${profile.uid}/monthly/${props.expenseId}/Aexpense/${obj}`).remove()
     }
 
+
     return (
-      <Cell key={props.index} onClick={cellClickHandler} isExpense={props.item?.type === "EXPENSE"}>
+      <Cell key={props.index} onClick={cellClickHandler} >
         <TnxDetailWrapper>
           <span>{props.item?.desc}</span>
-          <span>₹{props.item?.amount}</span>
+          <span>₹{props.item?.expense}</span>
         </TnxDetailWrapper>
 
         {isCellClicked && <AddTnxDetailWrapper  >
@@ -123,20 +133,19 @@ const TransactionComponent = (props) => {
           <br />
           <span> Date : {date ? date.toDateString() : "Date not found"}</span><br /><br />
           <span> Time : {date ? date.toTimeString() : "Time not found"}</span>
-          <DeleteButton onClick={() => { handleDelete(props.item.id) }}>Delete</DeleteButton>
+          <DeleteButton onClick={() => { handleMonthlyDelete(props.item.id) }} >Delete</DeleteButton>
         </AddTnxDetailWrapper>}
       </Cell>
     );
 
   };
 
-
   const filterData = useCallback((searchText) => {
     if (!searchText || !searchText.trim().length) {
-      updateTxn(props.transactions);
+      updateTxn(props.transactionsMonthly);
       return;
     }
-    let txn = [...props.transactions];
+    let txn = [...props.transactionsMonthly];
     txn = txn.filter((payload) =>
       payload.desc.toLowerCase().includes(searchText.toLowerCase().trim()),
     );
@@ -145,7 +154,8 @@ const TransactionComponent = (props) => {
 
   useEffect(() => {
     filterData(searchText);
-  }, [props.transactions, searchText, filterData]);
+  }, [searchText, filterData]);
+
 
 
   return (
@@ -155,19 +165,21 @@ const TransactionComponent = (props) => {
       </TitleAndPdfWrapper>
       <input
         placeholder="Search"
-        onChange={(e) => {
-          updateSearchText(e.target.value);
-          filterData(e.target.value);
-        }}
+      onChange={(e) => {
+        updateSearchText(e.target.value);
+        filterData(e.target.value);
+      }}
       />
+
       {filteredTransaction?.map((item, index) => (
-        <TransactionCell key={index} item={item} />
+        <TransactionCell expenseId={props.expenseId} key={index} item={item} />
       ))}
+
     </Container>
 
   )
 
-};
 
+}
 
-export default TransactionComponent;
+export default MonthlyTransaction

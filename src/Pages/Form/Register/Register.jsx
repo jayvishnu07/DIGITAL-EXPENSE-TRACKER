@@ -13,7 +13,7 @@ const Register = () => {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const { registerUser, SignInWithProvider , setIsRgisteration} = useProfile();
+  const { registerUser, SignInWithProvider, setIsRgisteration } = useProfile();
 
   // register with mail-id password
 
@@ -29,13 +29,13 @@ const Register = () => {
     }
   }
 
-    // register with google
+  // register with google
 
-    const SignUpwithGoogle = () => {
-      SignInWithProvider(new firebase.auth.GoogleAuthProvider());
-      setIsRgisteration(true)
-  
-    }
+  const SignUpwithGoogle = () => {
+    SignInWithProvider(new firebase.auth.GoogleAuthProvider());
+    setIsRgisteration(true)
+
+  }
   return (
     <div className="register-container">
       <span className='register-main-title' >Sign-Up</span>

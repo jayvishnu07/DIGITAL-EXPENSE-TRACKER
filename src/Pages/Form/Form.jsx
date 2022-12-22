@@ -38,7 +38,7 @@ const Form = () => {
           >Sign-Up</button>
         </div>
         <div className="form-toggle-contact">
-          {isSignIn ? <Login / > : <Register / >}
+          {isSignIn ? <Login /> : <Register />}
         </div>
       </div>
     </div>

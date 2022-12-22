@@ -1,9 +1,10 @@
 import React from 'react'
 import { Outlet, Navigate } from 'react-router-dom';
-import { ClimbingBoxLoader } from 'react-spinners';
+import { PropagateLoader } from 'react-spinners';
 import { useProfile } from '../../ContextApi/profile.context';
 
 import './css/Loading.css'
+import logo from '../../assests/images/et_logo.png'
 
 const PrivateRoute = () => {
   const { profile, isLoading } = useProfile();
@@ -11,7 +12,8 @@ const PrivateRoute = () => {
   if (isLoading && !profile) {
     return (
       <div className='loader-div'>
-        <ClimbingBoxLoader />
+        <img src={logo} alt=""  />
+        <PropagateLoader />
       </div>
     )
   }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Outlet ,Navigate} from 'react-router-dom';
-import { ClimbingBoxLoader } from 'react-spinners';
+import { PropagateLoader } from 'react-spinners';
 import { useProfile } from '../../ContextApi/profile.context';
 // import { SpinnerCenter } from '../../Pages/Style';
 import './css/Loading.css'
@@ -14,7 +14,7 @@ const PublicRoute = () => {
 if(isLoading && !profile){
   return(
     <div className='loader-div'>
-        <ClimbingBoxLoader />
+        <PropagateLoader />
       </div>
       )
 }

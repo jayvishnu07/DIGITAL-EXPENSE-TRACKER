@@ -11,13 +11,14 @@ import Home from './Pages/Home/Home'
 import History from './Pages/History/History'
 import Contact from './Pages/Contact/Contact'
 import Form from './Pages/Form/Form'
+import MonthlyMode from './Pages/MonthlyMode/MonthlyMode'
 
 //Components..........
 import PrivateRoute from "./Components/Route/PrivateRoute";
 import PublicRoute from "./Components/Route/PublicRoute";
 import { ProfileProvider } from "./ContextApi/profile.context";
 
-function App() {
+const App=()=> {
   return (
     < >
       <Router>
@@ -25,10 +26,11 @@ function App() {
           <Routes>
             <Route exact element={<PrivateRoute />} >
               <Route path='/' element={<><Navbar /><Home /></>} />
-            </Route>
             <Route path='*' element={<><Navbar /><Home /></>} />
+            <Route path='/monthly' element={<><Navbar /><MonthlyMode /></>} />
             <Route path='/history' element={<><Navbar /><History /></>} />
             <Route path='/contact' element={<><Navbar /><Contact /></>} />
+            </Route>
             <Route exact element={<PublicRoute />} >
               <Route path="/login" exact element={<Form />} />
             </Route>
@@ -37,7 +39,7 @@ function App() {
       </Router>
       <ToastContainer
         position="top-center"
-        autoClose={3000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

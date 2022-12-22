@@ -39,8 +39,8 @@ const TitleAndPdfWrapper = styled.div`
 display: flex;
 align-items: center;
 justify-content:space-around;
-margin:30px 0 10px 0;
-min-width:30rem;
+margin: 60px 0 10px 0;
+min-width:25rem;
 
 `;
 
@@ -68,7 +68,10 @@ const Cell = styled.div`
   &:active{
   transform: scale(.99);
   transition: none;
-
+  }
+  @media (max-width:520px) {
+    width: 23rem;
+  
   } 
   `;
 const TnxDetailWrapper = styled.div`
@@ -87,7 +90,7 @@ const AddTnxDetailWrapper = styled.div`
 
 const Extra = () => {
   const { transactionApi } = useProfile();
-
+  const [tnxHistry, setTnxHistry] = useState(null)
   const TransactionComponent = (props) => {
 
     const [searchText, updateSearchText] = useState("");
@@ -101,7 +104,7 @@ const Extra = () => {
         <Cell key={props.index} isExpense={props.item?.type === "EXPENSE"}>
           <TnxDetailWrapper>
             <span>{props.item?.desc}</span>
-            <span>${props.item?.amount}</span>
+            <span>₹{props.item?.amount}</span>
           </TnxDetailWrapper>
 
           {<AddTnxDetailWrapper  >
@@ -137,7 +140,7 @@ const Extra = () => {
 
     return (
       <Container>
-        
+
         <TitleAndPdfWrapper>
           <span>Transactions</span>
           <PdfButton onClick={handleExportWithComponent}>Export PDF</PdfButton>
@@ -160,19 +163,27 @@ const Extra = () => {
 
   };
 
+  useEffect(() => {
+    transactionApi.map((obj) => {
+      setTnxHistry(obj.id)
+    })
+  })
+
+  console.log(tnxHistry);
+
   const handleExportWithComponent = (event) => {
     pdfExportComponents.current.save();
 
   }
   const pdfExportComponents = useRef(null);
 
-
+  console.log(transactionApi);
 
   return (
     <PDFExport ref={pdfExportComponents} paperSize="A4" >
       <div className="extra-main-div">
         <div className="extra-fullTransaction-div">
-          <TransactionComponent transactions={transactionApi} />
+          {tnxHistry  ? <TransactionComponent transactions={transactionApi} /> : <div className='no-history' >No Tracking Yet...!</div>}
         </div>
       </div>
     </PDFExport>
